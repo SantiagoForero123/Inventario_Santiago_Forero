@@ -1,3 +1,41 @@
+<?php
+// Conexión a la base de datos
+$conn = new mysqli('localhost', 'root', '', 'asistencias');
+
+// Verificar la conexión
+if ($conn->connect_error) {
+    die("Error de conexión: " . $conn->connect_error);
+}
+
+// Procesar el formulario al enviarlo
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    // Obtener los datos del formulario
+    $fecha = $_POST['fecha'];
+    $codigo = $_POST['codigo'];
+    $nombre = $_POST['nombre'];
+    $cantidad = $_POST['cantidad'];
+    $precio = $_POST['precio'];
+    $tipo = $_POST['tipo'];
+
+    // Validar los datos (opcional)
+    if (empty($fecha) || empty($codigo) || empty($nombre) || empty($cantidad) || empty($precio) || empty($tipo)) {
+        echo "<script>alert('Por favor, complete todos los campos.');</script>";
+    } else {
+        // Insertar los datos en la base de datos
+        $sql = "INSERT INTO inventario (fecha, codigo, nombre, cantidad, precio, tipo) 
+                VALUES ('$fecha', '$codigo', '$nombre', '$cantidad', '$precio', '$tipo')";
+
+        if ($conn->query($sql) === TRUE) {
+            echo "<script>alert('Movimiento registrado con éxito.');</script>";
+        } else {
+            echo "<script>alert('Error al registrar el movimiento: " . $conn->error . "');</script>";
+        }
+    }
+}
+
+// Cerrar la conexión
+$conn->close();
+?>
 <!DOCTYPE html>
 <html lang="es">
 <head>
